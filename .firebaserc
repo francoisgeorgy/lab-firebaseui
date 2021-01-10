@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "lab-firebase-mobx",
+    "lab": "lab-firebase-mobx"
+  }
+}
