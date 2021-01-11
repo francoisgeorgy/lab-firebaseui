@@ -20,6 +20,7 @@ class FirebaseStore {
 
     signedIn = false;
     user = null;
+    unsubscribe = null;
 
     constructor(rootStore) {
 
@@ -27,6 +28,7 @@ class FirebaseStore {
 
         makeAutoObservable(this, {
             rootStore: false,
+            unsubscribe: false,
             setSignedIn: action
         });
         this.rootStore = rootStore;
@@ -42,21 +44,52 @@ class FirebaseStore {
             if (user) {
                 this.user = user;
                 this.setSignedIn(true);
+                this.startListeners();
             } else {
                 this.user = null;
                 this.setSignedIn(false);
+                this.stopListeners();
+                this.clearData();
             }
         })
 
+    }
+
+    stopListeners() {
+        console.log("FirebaseStore.destroy");
+        if (this.unsubscribe) this.unsubscribe();
+    }
+
+    startListeners() {
+        const db = firebase.firestore();
+        this.unsubscribe = db
+            .collection('users')
+            .onSnapshot(snapshot => {
+                console.log("FirebaseStore: users snapshot received");
+                snapshot.forEach(doc => {
+                        console.log("FirebaseStore: users snapshot:", doc.id, doc.data);
+                        // this.users.push({...doc.data(), uid: doc.id})
+                        this.rootStore.userStore.setUser(doc.data(), doc.id);
+                    }
+                );
+            });
     }
 
     setSignedIn(signedIn) {
         this.signedIn = signedIn;
     }
 
+    clearData() {
+        this.rootStore.userStore.clearUsers();
+    }
+
     // setFirebase = firebase => {
         // this.firebase = firebase;
     // };
+
+    loadUsers() {
+
+    }
 
 }
 

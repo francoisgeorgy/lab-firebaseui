@@ -29,12 +29,18 @@ class UserStore {
         this.users[uid] = user;
     };
 
+    clearUsers = () => {
+        this.users = null;
+    }
+
     get userList() {
         return Object.keys(this.users || {}).map(key => ({
             ...this.users[key],
             uid: key,
         }));
     }
+
+
 
 }
 
