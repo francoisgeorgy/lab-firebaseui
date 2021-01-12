@@ -1,6 +1,7 @@
 import FirebaseStore from "./firebaseStore";
 import SessionStore from "./sessionStore";
 import UserStore from "./userStore";
+import {DataStore} from "./dataStore";
 // import MessageStore from "./messageStore";
 
 class RootStore {
@@ -11,6 +12,7 @@ class RootStore {
         this.firebaseStore = new FirebaseStore(this);
         this.sessionStore = new SessionStore(this);
         this.userStore = new UserStore(this);
+        this.dataStore = new DataStore(this);
         // this.messageStore = new MessageStore(this);
     }
 }

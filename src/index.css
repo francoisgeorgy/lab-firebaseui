@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+body {
+    margin: 0 20px;
+}
+
 a {
     color: blue;
     cursor: pointer;

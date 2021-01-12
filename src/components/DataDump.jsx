@@ -19,7 +19,7 @@ export const DataDump = observer(() => {
     return (
         <div>
             <h2>Data dump</h2>
-            {/*<pre>{JSON.stringify(users)}</pre>*/}
+            <pre>{JSON.stringify(rootStore.dataStore.data, null, 4)}</pre>
         </div>
     );
 });

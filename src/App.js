@@ -3,6 +3,7 @@ import {SignInScreen} from "./components/SignIn";
 import {DataDump} from "./components/DataDump";
 import {Users} from "./components/Users";
 import './App.css';
+import {Data} from "./components/Data";
 
 export function App() {
 
@@ -12,6 +13,7 @@ export function App() {
         <div className="App">
             <SignInScreen />
             <Users />
+            <Data />
             <DataDump />
         </div>
     );
