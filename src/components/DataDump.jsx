@@ -1,6 +1,6 @@
 import {observer} from "mobx-react";
 import {rootStore} from "../stores";
-import firebase from "firebase";
+import {YouMustBeLoggedIn} from "./YouMustBeLoggedIn";
 
 export const DataDump = observer(() => {
 
@@ -8,7 +8,7 @@ export const DataDump = observer(() => {
 
     if (!rootStore.firebaseStore.signedIn) {
         console.log("DataDump: signedIn is false");
-        return null;
+        return <YouMustBeLoggedIn />;
     }
 
     console.log("DataDump: signedIn is true");
