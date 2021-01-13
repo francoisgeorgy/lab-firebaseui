@@ -1,5 +1,9 @@
 import {makeAutoObservable, action} from 'mobx';
-import firebase from "firebase";
+// Firebase App (the core Firebase SDK) is always required and must be listed first
+import firebase from "firebase/app";
+// Add the Firebase products that you want to use
+import "firebase/auth";
+import "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_API_KEY,
@@ -10,9 +14,11 @@ const firebaseConfig = {
     messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
 };
 
-// Instantiate a Firebase app.
-// firebase.initializeApp(firebaseConfig);
-
+/**
+ * Instantiate the Firebase app.
+ * Manage all interactions with Firebase.
+ * Populate dataStore, sessionStore and userStore.
+ */
 class FirebaseStore {
 
     rootStore = null;
@@ -36,6 +42,8 @@ class FirebaseStore {
         // Instantiate a Firebase app.
         console.log("FirebaseStore.constructor: firebase.initializeApp");
         firebase.initializeApp(firebaseConfig);
+
+        this.db = firebase.firestore();
 
         firebase.auth().onAuthStateChanged(user => {
 
@@ -90,6 +98,16 @@ class FirebaseStore {
     loadUsers() {
 
     }
+
+    // utils
+
+    user = uid => this.db.doc(`users/${uid}`);
+
+    users = () => this.db.collection('users');
+
+    preset = uid => this.db.doc(`presets/${uid}`);
+
+    presets = () => this.db.collection('presets');
 
 }
 

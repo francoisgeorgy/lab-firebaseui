@@ -1,7 +1,7 @@
+rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Custom functions
     function signedIn() {
         return request.auth != null;
     }
@@ -19,26 +19,19 @@ service cloud.firestore {
     	    return signedIn() && request.auth.uid == resource.id;
     }
 
-    // Rules
+    // Rules:
+
     match /users/{userId} {
         allow list: if isAdmin();
-    	   allow get, update, delete: if isSelf() || isAdmin();
-    	   allow create: if signedIn();
+    	allow get, update, delete: if isSelf() || isAdmin();
+    	allow create: if signedIn();
     }
 
-    match /messages/{messageId} {
+    match /presets/{presetId} {
         allow read: if signedIn();
         allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
         allow update, delete: if signedIn() && isOwner();
     }
-
-
-    match /data/{id} {
-        allow read: if signedIn();
-        allow create: if signedIn();
-        allow update, delete: if signedIn() && isOwner();
-    }
-
 
   }
 }

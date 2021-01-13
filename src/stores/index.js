@@ -4,6 +4,12 @@ import UserStore from "./userStore";
 import {DataStore} from "./dataStore";
 // import MessageStore from "./messageStore";
 
+/**
+ * FirebaseStore : host the Firebase app instance. Manage all interactions with Firebase.
+ * SessionStore : host the current logged in user.
+ * UserStore : host the users.
+ * DataStore : host the data.
+ */
 class RootStore {
     constructor() {
 
