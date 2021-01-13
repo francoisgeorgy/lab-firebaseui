@@ -4,7 +4,7 @@ import firebase from "firebase";
 export class DataStore {
 
     rootStore = null;
-    data = null;
+    presets = {};
 
     constructor(rootStore) {
 
@@ -12,13 +12,13 @@ export class DataStore {
 
         makeAutoObservable(this, {
             rootStore: false,
-            setData: action,
-            clearData: action
-            // dataList: computed
+            setPreset: action,
+            clearPresets: action
+            // presetList: computed
         });
         this.rootStore = rootStore;
 
-        this.startListeners();
+        // this.startListeners();
     }
 
     // stopListeners() {
@@ -26,33 +26,33 @@ export class DataStore {
     //     if (this.unsubscribe) this.unsubscribe();
     // }
 
-    startListeners() {
-        const db = firebase.firestore();
-        this.unsubscribe = db
-            .collection('data')
-            .onSnapshot(snapshot => {
-                console.log("DataStore: data snapshot received");
-                snapshot.forEach(doc => {
-                        console.log("DataStore: data snapshot:", doc.id, doc.data);
-                        // this.users.push({...doc.data(), uid: doc.id})
-                        this.setData(doc.data(), doc.id);
-                    }
-                );
-            });
-    }
+    // startListeners() {
+    //     const db = firebase.firestore();
+    //     this.unsubscribe = db
+    //         .collection('preset')
+    //         .onSnapshot(snapshot => {
+    //             console.log("PresetStore: preset snapshot received");
+    //             snapshot.forEach(doc => {
+    //                     console.log("PresetStore: preset snapshot:", doc.id, doc.preset);
+    //                     // this.users.push({...doc.preset(), uid: doc.id})
+    //                     this.setPreset(doc.preset(), doc.id);
+    //                 }
+    //             );
+    //         });
+    // }
 
-    setData = (data, uid) => {
-        if (!this.data) {
-            this.data = {};
-        }
-        this.data[uid] = data;
+    setPreset = (preset, uid) => {
+        // if (!this.presets) {
+        //     this.presets = {};
+        // }
+        this.presets[uid] = preset;
     };
 
-    clearData = () => {
-        this.data = null;
+    clearPresets = () => {
+        this.presets = {};
     }
 
-    addData = () => {
+    addPreset = () => {
 
         const db = firebase.firestore();
 
@@ -63,16 +63,17 @@ export class DataStore {
         //     // createdAt: this.props.firebase.serverValue.TIMESTAMP,
         // });
 
-        db.collection("data").add({
-            name: "Los Angeles",
-            state: "CA",
-            country: "USA"
+        // db.collection("presets").add({
+        this.rootStore.firebaseStore.presets().add({
+            name: "HelloSpace",
+            device: "BeatStation",
+            genre: "pad"
         })
         .then(function() {
-            console.log("addData: document successfully written!");
+            console.log("addPreset: document successfully written!");
         })
         .catch(function(error) {
-            console.error("addData: error writing document: ", error);
+            console.error("addPreset: error writing document: ", error);
         });
 
     }

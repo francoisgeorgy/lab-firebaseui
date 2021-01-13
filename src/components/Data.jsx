@@ -19,7 +19,7 @@ export const Data = observer(() => {
         <div>
             <h2>Data</h2>
             {/*<pre>{JSON.stringify(users)}</pre>*/}
-            <button onClick={rootStore.dataStore.addData} >ADD</button>
+            <button onClick={rootStore.dataStore.addPreset} >Add preset</button>
         </div>
     );
 });

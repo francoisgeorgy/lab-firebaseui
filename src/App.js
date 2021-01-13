@@ -4,6 +4,7 @@ import {DataDump} from "./components/DataDump";
 import {Users} from "./components/Users";
 import './App.css';
 import {Data} from "./components/Data";
+import {Presets} from "./components/Presets";
 
 export function App() {
 
@@ -12,9 +13,10 @@ export function App() {
     return (
         <div className="App">
             <SignInScreen />
-            <Users />
+            <Presets />
             <Data />
             <DataDump />
+            <Users />
         </div>
     );
 }

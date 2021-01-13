@@ -61,6 +61,8 @@ class FirebaseStore {
             }
         })
 
+        this.startDataListener();
+
     }
 
     stopListeners() {
@@ -78,6 +80,33 @@ class FirebaseStore {
                         console.log("FirebaseStore: users snapshot:", doc.id, doc.data);
                         // this.users.push({...doc.data(), uid: doc.id})
                         this.rootStore.userStore.setUser(doc.data(), doc.id);
+                    }
+                );
+            });
+    }
+
+    // stopDataListener() {
+    //     console.log("FirebaseStore.destroy");
+    //     if (this.unsubscribe) this.unsubscribe();
+    // }
+
+    startDataListener() {
+        // this.unsubscribe =
+        //     this.data().onSnapshot(snapshot => {
+        //         console.log("FirebaseStore: data snapshot received");
+        //         snapshot.forEach(doc => {
+        //                 console.log("FirebaseStore: data snapshot:", doc.id, doc.data);
+        //                 // this.users.push({...doc.data(), uid: doc.id})
+        //                 this.rootStore.dataStore.setData(doc.data(), doc.id);
+        //             }
+        //         );
+        //     });
+            this.presets().onSnapshot(snapshot => {
+                console.log("FirebaseStore: presets snapshot received");
+                snapshot.forEach(doc => {
+                        console.log("FirebaseStore: presets snapshot:", doc.id, doc.data);
+                        // this.users.push({...doc.data(), uid: doc.id})
+                        this.rootStore.dataStore.setPreset(doc.data(), doc.id);
                     }
                 );
             });
@@ -108,6 +137,8 @@ class FirebaseStore {
     preset = uid => this.db.doc(`presets/${uid}`);
 
     presets = () => this.db.collection('presets');
+
+    // data = () => this.db.collection('data');
 
 }
 
