@@ -22,7 +22,7 @@ const uiConfig = {
 
 export const SignInScreen = observer(() => {
 
-    console.log("SignInScreen()");
+    // console.log("SignInScreen()");
 
     // const [isSignedIn, setIsSignedIn] = useState(false); // Local signed-in state.
 
@@ -35,7 +35,7 @@ export const SignInScreen = observer(() => {
     // }, []);
 
     if (!rootStore.firebaseStore.signedIn) {
-        console.log("SignInScreen: signedIn is false");
+        // console.log("SignInScreen: signedIn is false");
         return (
             <div>
                 <h1>My App</h1>
@@ -45,13 +45,13 @@ export const SignInScreen = observer(() => {
         );
     }
 
-    console.log("SignInScreen: signedIn is true");
+    // console.log("SignInScreen: signedIn is true");
 
     return (
         <div>
             <h1>My App</h1>
             <p>Welcome {firebase.auth().currentUser.displayName}! You are now signed-in!</p>
-            <a onClick={() => firebase.auth().signOut()}>Sign-out</a>
+            <button onClick={() => firebase.auth().signOut()}>Sign-out</button>
         </div>
     );
 });

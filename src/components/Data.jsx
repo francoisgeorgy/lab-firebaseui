@@ -6,11 +6,11 @@ export const Data = observer(() => {
     console.log("Data()");
 
     if (!rootStore.firebaseStore.signedIn) {
-        console.log("Data: signedIn is false");
+        // console.log("Data: signedIn is false");
         return null;
     }
 
-    console.log("Data: signedIn is true");
+    // console.log("Data: signedIn is true");
 
     // const db = firebase.firestore();
     // const users = () => db.collection('users');

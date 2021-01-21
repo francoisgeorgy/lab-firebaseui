@@ -26,7 +26,8 @@ class FirebaseStore {
 
     signedIn = false;
     user = null;
-    unsubscribe = null;
+    unsubscribeUsers = null;
+    unsubscribePresets = null;
 
     constructor(rootStore) {
 
@@ -34,7 +35,8 @@ class FirebaseStore {
 
         makeAutoObservable(this, {
             rootStore: false,
-            unsubscribe: false,
+            unsubscribeUsers: false,
+            unsubscribePresets: false,
             setSignedIn: action
         });
         this.rootStore = rootStore;
@@ -47,16 +49,18 @@ class FirebaseStore {
 
         firebase.auth().onAuthStateChanged(user => {
 
-            console.log("firebase onAuthStateChanged", user !== null);
+            console.warn("firebase onAuthStateChanged", user !== null);
 
             if (user) {
                 this.user = user;
                 this.setSignedIn(true);
                 this.startListeners();
+                this.startDataListener();
             } else {
                 this.user = null;
                 this.setSignedIn(false);
                 this.stopListeners();
+                this.stopDataListener();
                 this.clearData();
             }
         })
@@ -67,17 +71,18 @@ class FirebaseStore {
 
     stopListeners() {
         console.log("FirebaseStore.destroy");
-        if (this.unsubscribe) this.unsubscribe();
+        if (this.unsubscribeUsers) this.unsubscribeUsers();
     }
 
     startListeners() {
+        console.log("firebaseStore: startListeners");
         const db = firebase.firestore();
-        this.unsubscribe = db
+        this.unsubscribeUsers = db
             .collection('users')
             .onSnapshot(snapshot => {
                 console.log("FirebaseStore: users snapshot received");
                 snapshot.forEach(doc => {
-                        console.log("FirebaseStore: users snapshot:", doc.id, doc.data);
+                        // console.log("FirebaseStore: users snapshot:", doc.id, doc.data);
                         // this.users.push({...doc.data(), uid: doc.id})
                         this.rootStore.userStore.setUser(doc.data(), doc.id);
                     }
@@ -85,13 +90,14 @@ class FirebaseStore {
             });
     }
 
-    // stopDataListener() {
-    //     console.log("FirebaseStore.destroy");
-    //     if (this.unsubscribe) this.unsubscribe();
-    // }
+    stopDataListener() {
+        console.log("FirebaseStore.destroy");
+        if (this.unsubscribePresets) this.unsubscribePresets();
+    }
 
     startDataListener() {
-        // this.unsubscribe =
+        console.log("firebaseStore: startDataListener");
+        // this.unsubscribeUsers =
         //     this.data().onSnapshot(snapshot => {
         //         console.log("FirebaseStore: data snapshot received");
         //         snapshot.forEach(doc => {
@@ -101,15 +107,15 @@ class FirebaseStore {
         //             }
         //         );
         //     });
-            this.presets().onSnapshot(snapshot => {
-                console.log("FirebaseStore: presets snapshot received");
-                snapshot.forEach(doc => {
-                        console.log("FirebaseStore: presets snapshot:", doc.id, doc.data);
-                        // this.users.push({...doc.data(), uid: doc.id})
-                        this.rootStore.dataStore.setPreset(doc.data(), doc.id);
-                    }
-                );
-            });
+        this.unsubscribePresets = this.presets().onSnapshot(snapshot => {
+            console.log("FirebaseStore: presets snapshot received");
+            snapshot.forEach(doc => {
+                    // console.log("FirebaseStore: presets snapshot:", doc.id, doc.data);
+                    // this.users.push({...doc.data(), uid: doc.id})
+                    this.rootStore.dataStore.setPreset(doc.data(), doc.id);
+                }
+            );
+        });
     }
 
     setSignedIn(signedIn) {
@@ -118,6 +124,7 @@ class FirebaseStore {
 
     clearData() {
         this.rootStore.userStore.clearUsers();
+        this.rootStore.dataStore.clearPresets();
     }
 
     // setFirebase = firebase => {
@@ -130,7 +137,9 @@ class FirebaseStore {
 
     // utils
 
-    user = uid => this.db.doc(`users/${uid}`);
+    // foo = () => console.log('bar', this.db);
+
+    // user = uid => this.db.doc(`users/${uid}`);
 
     users = () => this.db.collection('users');
 

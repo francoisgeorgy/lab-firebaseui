@@ -1,7 +1,7 @@
 
 export const YouMustBeLoggedIn = () => {
 
-    console.log("YouMustBeLoggedIn()");
+    // console.log("YouMustBeLoggedIn()");
 
     // if (!rootStore.firebaseStore.signedIn) {
     //     console.log("DataDump: signedIn is false");

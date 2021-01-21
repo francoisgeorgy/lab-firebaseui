@@ -23,12 +23,12 @@ export class DataStore {
 
     // stopListeners() {
     //     console.log("FirebaseStore.destroy");
-    //     if (this.unsubscribe) this.unsubscribe();
+    //     if (this.unsubscribeUsers) this.unsubscribeUsers();
     // }
 
     // startListeners() {
     //     const db = firebase.firestore();
-    //     this.unsubscribe = db
+    //     this.unsubscribeUsers = db
     //         .collection('preset')
     //         .onSnapshot(snapshot => {
     //             console.log("PresetStore: preset snapshot received");
@@ -65,6 +65,7 @@ export class DataStore {
 
         // db.collection("presets").add({
         this.rootStore.firebaseStore.presets().add({
+            userId: this.rootStore.firebaseStore.user.uid,
             name: "HelloSpace",
             device: "BeatStation",
             genre: "pad"
@@ -78,6 +79,17 @@ export class DataStore {
 
     }
 
+    deletePreset = (id) => {
+        // db.collection("cities").doc("DC").delete().then(function() {
+        //     console.log("Document successfully deleted!");
+        // }).catch(function(error) {
+        //     console.error("Error removing document: ", error);
+        // });
+        this.rootStore.firebaseStore.preset(id)
+            .delete()
+            .then(() => console.log(`${id} deleted`))
+            .catch(error => console.warn(`error deleting ${id}`, error));
+    }
 
 }
 

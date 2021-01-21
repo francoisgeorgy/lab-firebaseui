@@ -4,10 +4,10 @@ import {YouMustBeLoggedIn} from "./YouMustBeLoggedIn";
 
 export const Users = observer(() => {
 
-    console.log("Users()");
+    // console.log("Users()");
 
     if (!rootStore.firebaseStore.signedIn) {
-        console.log("Users: signedIn is false");
+        // console.log("Users: signedIn is false");
         return <YouMustBeLoggedIn />;
     }
 

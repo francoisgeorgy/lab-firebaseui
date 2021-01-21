@@ -1,10 +1,10 @@
 import {observer} from "mobx-react";
 import {rootStore} from "../stores";
-import {useCallback} from "react/cjs/react.production.min";
+// import {useCallback} from "react/cjs/react.production.min";
 
 export const Presets = observer(() => {
 
-    console.log("Presets()");
+    // console.log("Presets()");
 
     // const remove = useCallback(
     //     (id) => {
@@ -15,14 +15,15 @@ export const Presets = observer(() => {
 
     const remove = (id) => {
         console.log("remove", id);
+        rootStore.dataStore.deletePreset(id);
     }
 
     if (!rootStore.firebaseStore.signedIn) {
-        console.log("Presets: signedIn is false");
+        // console.log("Presets: signedIn is false");
         // return null;
     }
 
-    console.log("Presets: signedIn is true");
+    // console.log("Presets: signedIn is true");
 
     // const db = firebase.firestore();
     // const users = () => db.collection('users');
@@ -35,7 +36,7 @@ export const Presets = observer(() => {
                 {Object.entries(rootStore.dataStore.presets).map(
                     ([key, preset], i) =>
                         <div key={key}>
-                            <div>{i}</div>
+                            <div>{i} - {key}</div>
                             <div>{preset.name}</div>
                             <div>{preset.device}</div>
                             <div>{preset.genre}</div>
@@ -43,6 +44,7 @@ export const Presets = observer(() => {
                         </div>
                 )}
             </div>
+            <pre>{JSON.stringify(rootStore.dataStore.presets, null, 4)}</pre>
         </div>
     );
 });
