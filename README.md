@@ -6,6 +6,13 @@
     yarn add firebase
     yarn add react-firebaseui
 
+## Architecture
+
+The components deal with userStore, sessionStore and dataStore. They don't deal directly with Firebase (firebaseStore).
+
+The userStore, sessionStore and dataStore deal with Firebase.  
+
+
 ## Data model
 
 https://firebase.google.com/docs/firestore/data-model
