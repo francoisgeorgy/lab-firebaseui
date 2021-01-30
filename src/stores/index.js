@@ -15,14 +15,14 @@ class RootStore {
 
         console.log("RootStore.constructor");
 
-        this.firebaseStore = new FirebaseStore(this);
-        this.sessionStore = new SessionStore(this);
-        this.userStore = new UserStore(this);
-        this.dataStore = new DataStore(this);
+        this.fire = new FirebaseStore(this);
+        this.session = new SessionStore(this);
+        this.users = new UserStore(this);
+        this.data = new DataStore(this);
         // this.messageStore = new MessageStore(this);
     }
 }
 
-export const rootStore = new RootStore();
+export const stores = new RootStore();
 
-// export default rootStore;
+// export default stores;

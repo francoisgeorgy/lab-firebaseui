@@ -2,7 +2,7 @@ import {observable, action, makeAutoObservable} from 'mobx';
 
 class SessionStore {
 
-    rootStore = null;
+    stores = null;
     authUser = null;
 
     constructor(rootStore) {
@@ -10,10 +10,10 @@ class SessionStore {
         console.log("sessionStore.constructor");
 
         makeAutoObservable(this, {
-            rootStore: false,
+            stores: false,
             setAuthUser: action
         });
-        this.rootStore = rootStore;
+        this.stores = rootStore;
     }
 
     setAuthUser = authUser => {

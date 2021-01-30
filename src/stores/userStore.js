@@ -2,20 +2,20 @@ import {action, computed, makeAutoObservable} from 'mobx';
 
 class UserStore {
 
-    rootStore = null;
+    stores = null;
     users = null;
 
-    constructor(rootStore) {
+    constructor(stores) {
 
         console.log("UserStore.constructor");
 
         makeAutoObservable(this, {
-            rootStore: false,
+            stores: false,
             setUsers: action,
             setUser: action,
             userList: computed
         });
-        this.rootStore = rootStore;
+        this.stores = stores;
     }
 
     setUsers = users => {

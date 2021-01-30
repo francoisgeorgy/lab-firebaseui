@@ -3,7 +3,7 @@ export const YouMustBeLoggedIn = () => {
 
     // console.log("YouMustBeLoggedIn()");
 
-    // if (!rootStore.firebaseStore.signedIn) {
+    // if (!stores.fire.signedIn) {
     //     console.log("DataDump: signedIn is false");
     //     return null;
     // }

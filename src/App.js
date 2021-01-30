@@ -1,9 +1,8 @@
 import React from 'react';
 import {SignInScreen} from "./components/SignIn";
 import {DataDump} from "./components/DataDump";
-import {Users} from "./components/Users";
+// import {Users} from "./components/Users";
 import './App.css';
-import {Data} from "./components/Data";
 import {Presets} from "./components/Presets";
 
 export function App() {
@@ -14,9 +13,9 @@ export function App() {
         <div className="App">
             <SignInScreen />
             <Presets />
-            <Data />
+            {/*<Data />*/}
             <DataDump />
-            <Users />
+            {/*<Users />*/}
         </div>
     );
 }

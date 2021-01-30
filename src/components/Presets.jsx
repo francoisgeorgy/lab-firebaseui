@@ -1,5 +1,6 @@
 import {observer} from "mobx-react";
-import {rootStore} from "../stores";
+import {entries} from "mobx";
+import {stores} from "../stores";
 // import {useCallback} from "react/cjs/react.production.min";
 
 export const Presets = observer(() => {
@@ -15,10 +16,10 @@ export const Presets = observer(() => {
 
     const remove = (id) => {
         console.log("remove", id);
-        rootStore.dataStore.deletePreset(id);
+        stores.data.deletePreset(id);
     }
 
-    if (!rootStore.firebaseStore.signedIn) {
+    if (!stores.fire.signedIn) {
         // console.log("Presets: signedIn is false");
         // return null;
     }
@@ -32,19 +33,20 @@ export const Presets = observer(() => {
         <div>
             <h2>Presets</h2>
             <div>
-                {/*{JSON.stringify(Object.entries(rootStore.dataStore.presets), null, 4)}*/}
-                {Object.entries(rootStore.dataStore.presets).map(
+                <button onClick={stores.fire.addPreset} >Add preset</button>
+            </div>
+            <div>
+                {/*{JSON.stringify(Object.entries(stores.data.presets), null, 4)}*/}
+                {entries(stores.data.presets).map(
                     ([key, preset], i) =>
                         <div key={key}>
                             <div>{i} - {key}</div>
                             <div>{preset.name}</div>
-                            <div>{preset.device}</div>
-                            <div>{preset.genre}</div>
                             <div><button onClick={() => remove(key)}>delete</button></div>
                         </div>
                 )}
             </div>
-            <pre>{JSON.stringify(rootStore.dataStore.presets, null, 4)}</pre>
+            <pre>{JSON.stringify(stores.data.presets, null, 4)}</pre>
         </div>
     );
 });

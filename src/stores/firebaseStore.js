@@ -17,11 +17,11 @@ const firebaseConfig = {
 /**
  * Instantiate the Firebase app.
  * Manage all interactions with Firebase.
- * Populate dataStore, sessionStore and userStore.
+ * Populate data, sessionStore and users.
  */
-class FirebaseStore {
+class fire {
 
-    rootStore = null;
+    stores = null;
     // firebase = null;
 
     signedIn = false;
@@ -31,18 +31,18 @@ class FirebaseStore {
 
     constructor(rootStore) {
 
-        console.log("FirebaseStore.constructor");
+        console.log("fire.constructor");
 
         makeAutoObservable(this, {
-            rootStore: false,
+            stores: false,
             unsubscribeUsers: false,
             unsubscribePresets: false,
             setSignedIn: action
         });
-        this.rootStore = rootStore;
+        this.stores = rootStore;
 
         // Instantiate a Firebase app.
-        console.log("FirebaseStore.constructor: firebase.initializeApp");
+        console.log("fire.constructor: firebase.initializeApp");
         firebase.initializeApp(firebaseConfig);
 
         this.db = firebase.firestore();
@@ -61,7 +61,8 @@ class FirebaseStore {
                 this.setSignedIn(false);
                 this.stopListeners();
                 this.stopDataListener();
-                this.clearData();
+                this.stores.users.clearUsers();
+                this.stores.data.clearPresets();
             }
         })
 
@@ -70,66 +71,87 @@ class FirebaseStore {
     }
 
     stopListeners() {
-        console.log("FirebaseStore.destroy");
+        console.log("fire.destroy");
         if (this.unsubscribeUsers) this.unsubscribeUsers();
     }
 
     startListeners() {
-        console.log("firebaseStore: startListeners");
+        console.log("fire: startListeners");
         const db = firebase.firestore();
         this.unsubscribeUsers = db
             .collection('users')
             .onSnapshot(snapshot => {
-                console.log("FirebaseStore: users snapshot received");
+                console.log("fire: users snapshot received");
                 snapshot.forEach(doc => {
-                        // console.log("FirebaseStore: users snapshot:", doc.id, doc.data);
+                        // console.log("fire: users snapshot:", doc.id, doc.data);
                         // this.users.push({...doc.data(), uid: doc.id})
-                        this.rootStore.userStore.setUser(doc.data(), doc.id);
+                        this.stores.users.setUser(doc.data(), doc.id);
                     }
                 );
             });
     }
 
     stopDataListener() {
-        console.log("FirebaseStore.destroy");
+        console.log("fire.destroy");
         if (this.unsubscribePresets) this.unsubscribePresets();
     }
 
     startDataListener() {
-        console.log("firebaseStore: startDataListener");
+        console.log("fire: startDataListener");
         // this.unsubscribeUsers =
         //     this.data().onSnapshot(snapshot => {
-        //         console.log("FirebaseStore: data snapshot received");
+        //         console.log("fire: data snapshot received");
         //         snapshot.forEach(doc => {
-        //                 console.log("FirebaseStore: data snapshot:", doc.id, doc.data);
+        //                 console.log("fire: data snapshot:", doc.id, doc.data);
         //                 // this.users.push({...doc.data(), uid: doc.id})
-        //                 this.rootStore.dataStore.setData(doc.data(), doc.id);
+        //                 this.stores.data.setData(doc.data(), doc.id);
         //             }
         //         );
         //     });
         this.unsubscribePresets = this.presets().onSnapshot(snapshot => {
-            console.log("FirebaseStore: presets snapshot received");
+            console.log("fire: presets snapshot received");
             snapshot.forEach(doc => {
-                    // console.log("FirebaseStore: presets snapshot:", doc.id, doc.data);
+                    // console.log("fire: presets snapshot:", doc.id, doc.data);
                     // this.users.push({...doc.data(), uid: doc.id})
-                    this.rootStore.dataStore.setPreset(doc.data(), doc.id);
+                    this.stores.data.setPreset(doc.data(), doc.id);
                 }
             );
         });
     }
 
-    setSignedIn(signedIn) {
-        this.signedIn = signedIn;
+    addPreset = async () => {
+        // db.collection("presets").add({
+        try {
+            await this.stores.fire.presets().add({
+                userId: this.stores.fire.user.uid,
+                name: `preset-${Math.round(Math.random()*1000)}`
+            })
+            console.log("savePreset: document successfully written!");
+        } catch (error) {
+            console.error("savePreset: error writing document: ", error);
+        }
     }
 
-    clearData() {
-        this.rootStore.userStore.clearUsers();
-        this.rootStore.dataStore.clearPresets();
+    deletePreset = (id) => {
+        // db.collection("cities").doc("DC").delete().then(function() {
+        //     console.log("Document successfully deleted!");
+        // }).catch(function(error) {
+        //     console.error("Error removing document: ", error);
+        // });
+        this.stores.fire.preset(id)
+            .delete()
+            .then(() => console.log(`${id} deleted`))
+            .catch(error => console.warn(`error deleting ${id}`, error));
     }
 
     // setFirebase = firebase => {
         // this.firebase = firebase;
     // };
+
+    setSignedIn(signedIn) {
+        this.signedIn = signedIn;
+    }
+
 
     loadUsers() {
 
@@ -151,4 +173,4 @@ class FirebaseStore {
 
 }
 
-export default FirebaseStore;
+export default fire;

@@ -1,7 +1,7 @@
 import {observer} from "mobx-react";
 import firebase from "firebase";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
-import {rootStore} from "../stores";
+import {stores} from "../stores";
 
 // Configure FirebaseUI.
 const uiConfig = {
@@ -34,11 +34,10 @@ export const SignInScreen = observer(() => {
     //     return () => unregisterAuthObserver(); // Make sure we un-register Firebase observers when the component unmounts.
     // }, []);
 
-    if (!rootStore.firebaseStore.signedIn) {
+    if (!stores.fire.signedIn) {
         // console.log("SignInScreen: signedIn is false");
         return (
             <div>
-                <h1>My App</h1>
                 <p>Please sign-in:</p>
                 <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
             </div>
@@ -49,9 +48,7 @@ export const SignInScreen = observer(() => {
 
     return (
         <div>
-            <h1>My App</h1>
-            <p>Welcome {firebase.auth().currentUser.displayName}! You are now signed-in!</p>
-            <button onClick={() => firebase.auth().signOut()}>Sign-out</button>
+            {firebase.auth().currentUser.displayName} <button onClick={() => firebase.auth().signOut()}>Sign-out</button>
         </div>
     );
 });

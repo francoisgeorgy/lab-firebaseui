@@ -1,12 +1,12 @@
 import {observer} from "mobx-react";
-import {rootStore} from "../stores";
+import {stores} from "../stores";
 import {YouMustBeLoggedIn} from "./YouMustBeLoggedIn";
 
 export const Users = observer(() => {
 
     // console.log("Users()");
 
-    if (!rootStore.firebaseStore.signedIn) {
+    if (!stores.fire.signedIn) {
         // console.log("Users: signedIn is false");
         return <YouMustBeLoggedIn />;
     }
@@ -19,7 +19,7 @@ export const Users = observer(() => {
     return (
         <div>
             <h2>Users</h2>
-            <pre>{JSON.stringify(rootStore.userStore.userList, null, 4)}</pre>
+            <pre>{JSON.stringify(stores.users.userList, null, 4)}</pre>
         </div>
     );
 });

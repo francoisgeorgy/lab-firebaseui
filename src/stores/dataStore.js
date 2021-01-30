@@ -3,28 +3,64 @@ import firebase from "firebase";
 
 export class DataStore {
 
-    rootStore = null;
-    presets = {};
+    stores = null;
 
-    constructor(rootStore) {
+    // The list of presets:
+    presets = new Map();
+
+    unsubscribePresets = null;
+
+    constructor(stores) {
 
         console.log("DataStore.constructor");
 
         makeAutoObservable(this, {
-            rootStore: false,
+            stores: false,
             setPreset: action,
             clearPresets: action
             // presetList: computed
         });
-        this.rootStore = rootStore;
+        this.stores = stores;
+
+        this.startDataListener();
 
         // this.startListeners();
     }
 
-    // stopListeners() {
-    //     console.log("FirebaseStore.destroy");
-    //     if (this.unsubscribeUsers) this.unsubscribeUsers();
-    // }
+    setPreset = (preset, uid) => {
+        console.log("setPreset", uid);
+        this.presets.set(uid, preset);
+    };
+
+    clearPresets = () => {
+        this.presets.clear();
+    }
+
+    startDataListener() {
+        console.log("DataStore: startDataListener");
+
+        // Presets:
+        this.unsubscribePresets = this.stores.fire.presets().onSnapshot(snapshot => {
+            console.log("DataStore: presets snapshot received");
+            snapshot.forEach(doc => {
+                // @ts-ignore
+                this.setPreset(doc.data(), doc.id);
+            });
+        });
+
+        // Messages:
+        // this.unsubscribeMessages = this.stores.fire.messages().onSnapshot(snapshot => {
+        //     console.log("DataStore: messages snapshot received");
+        //     snapshot.forEach(doc => {
+        //         // @ts-ignore
+        //         this.setMessage(doc.data(), doc.id);
+        //     });
+        // });
+    }
+
+    stopListeners() {
+        if (this.unsubscribePresets) this.unsubscribePresets();
+    }
 
     // startListeners() {
     //     const db = firebase.firestore();
@@ -41,56 +77,6 @@ export class DataStore {
     //         });
     // }
 
-    setPreset = (preset, uid) => {
-        // if (!this.presets) {
-        //     this.presets = {};
-        // }
-        this.presets[uid] = preset;
-    };
-
-    clearPresets = () => {
-        this.presets = {};
-    }
-
-    addPreset = () => {
-
-        const db = firebase.firestore();
-
-        // const db = this.rootStore.firebaseStore.db.ref('messages');
-        // this.rootStore.firebaseStore.db.ref('messages').push({
-        //     text: "blabla"
-        //     // userId: 123,
-        //     // createdAt: this.props.firebase.serverValue.TIMESTAMP,
-        // });
-
-        // db.collection("presets").add({
-        this.rootStore.firebaseStore.presets().add({
-            userId: this.rootStore.firebaseStore.user.uid,
-            name: "HelloSpace",
-            device: "BeatStation",
-            genre: "pad"
-        })
-        .then(function() {
-            console.log("addPreset: document successfully written!");
-        })
-        .catch(function(error) {
-            console.error("addPreset: error writing document: ", error);
-        });
-
-    }
-
-    deletePreset = (id) => {
-        // db.collection("cities").doc("DC").delete().then(function() {
-        //     console.log("Document successfully deleted!");
-        // }).catch(function(error) {
-        //     console.error("Error removing document: ", error);
-        // });
-        this.rootStore.firebaseStore.preset(id)
-            .delete()
-            .then(() => console.log(`${id} deleted`))
-            .catch(error => console.warn(`error deleting ${id}`, error));
-    }
-
 }
 
-// export default DataStore;
+// export const datastore = new DataStore();
