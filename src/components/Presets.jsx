@@ -14,10 +14,10 @@ export const Presets = observer(() => {
     //     []
     // );
 
-    const remove = (id) => {
-        console.log("remove", id);
-        stores.data.deletePreset(id);
-    }
+    // const deletePreset = (presetId) => {
+    //     console.log("remove", presetId);
+    //     stores.data.deletePreset(presetId);
+    // }
 
     if (!stores.fire.signedIn) {
         // console.log("Presets: signedIn is false");
@@ -33,7 +33,7 @@ export const Presets = observer(() => {
         <div>
             <h2>Presets</h2>
             <div>
-                <button onClick={stores.fire.addPreset} >Add preset</button>
+                <button onClick={stores.data.createPreset}>Create preset</button>
             </div>
             <div>
                 {/*{JSON.stringify(Object.entries(stores.data.presets), null, 4)}*/}
@@ -42,7 +42,7 @@ export const Presets = observer(() => {
                         <div key={key}>
                             <div>{i} - {key}</div>
                             <div>{preset.name}</div>
-                            <div><button onClick={() => remove(key)}>delete</button></div>
+                            <div><button onClick={() => stores.data.deletePreset(key)}>delete</button></div>
                         </div>
                 )}
             </div>

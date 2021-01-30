@@ -54,22 +54,22 @@ class fire {
             if (user) {
                 this.user = user;
                 this.setSignedIn(true);
-                this.startListeners();
-                this.startDataListener();
+                //this.startListeners();
+                this.listenToDataUpdates();
             } else {
                 this.user = null;
                 this.setSignedIn(false);
-                this.stopListeners();
-                this.stopDataListener();
+                //this.stopListeners();
+                this.stopListeningToDataUpdates();
                 this.stores.users.clearUsers();
                 this.stores.data.clearPresets();
             }
         })
 
-        this.startDataListener();
+        this.listenToDataUpdates();
 
     }
-
+/*
     stopListeners() {
         console.log("fire.destroy");
         if (this.unsubscribeUsers) this.unsubscribeUsers();
@@ -90,63 +90,62 @@ class fire {
                 );
             });
     }
-
-    stopDataListener() {
-        console.log("fire.destroy");
+*/
+    stopListeningToDataUpdates() {
+        console.log("fire.stopListeningToDataUpdates");
+        if (this.unsubscribeUsers) this.unsubscribeUsers();
         if (this.unsubscribePresets) this.unsubscribePresets();
     }
 
-    startDataListener() {
-        console.log("fire: startDataListener");
-        // this.unsubscribeUsers =
-        //     this.data().onSnapshot(snapshot => {
-        //         console.log("fire: data snapshot received");
-        //         snapshot.forEach(doc => {
-        //                 console.log("fire: data snapshot:", doc.id, doc.data);
-        //                 // this.users.push({...doc.data(), uid: doc.id})
-        //                 this.stores.data.setData(doc.data(), doc.id);
-        //             }
-        //         );
-        //     });
-        this.unsubscribePresets = this.presets().onSnapshot(snapshot => {
-            console.log("fire: presets snapshot received");
-            snapshot.forEach(doc => {
-                    // console.log("fire: presets snapshot:", doc.id, doc.data);
-                    // this.users.push({...doc.data(), uid: doc.id})
-                    this.stores.data.setPreset(doc.data(), doc.id);
-                }
-            );
-        });
+    listenToDataUpdates() {
+        console.log("fire.listenToDataUpdates");
+        this.unsubscribeUsers = this.users()
+            .onSnapshot(snapshot => {
+                console.log("fire: users snapshot received");
+                snapshot.forEach(doc => {
+                    this.stores.users.setUser(doc.data(), doc.id);
+                });
+            });
+        this.unsubscribePresets = this.presets()
+            .onSnapshot(snapshot => {
+                console.log("fire: presets snapshot received");
+                snapshot.forEach(doc => {
+                    this.stores.data.setPreset(doc.id, doc.data());
+                });
+            });
     }
 
+    /**
+     * Create a preset in the firestore cloud
+     * @returns {Promise<void>}
+     */
     addPreset = async () => {
-        // db.collection("presets").add({
         try {
             await this.stores.fire.presets().add({
                 userId: this.stores.fire.user.uid,
                 name: `preset-${Math.round(Math.random()*1000)}`
-            })
-            console.log("savePreset: document successfully written!");
+            });
+            console.log("addPreset: document successfully written!");
         } catch (error) {
-            console.error("savePreset: error writing document: ", error);
+            //console.error("addPreset: error writing document: ", error);
+            throw new Error("addPreset: error writing preset: " + error.message());
         }
     }
 
-    deletePreset = (id) => {
-        // db.collection("cities").doc("DC").delete().then(function() {
-        //     console.log("Document successfully deleted!");
-        // }).catch(function(error) {
-        //     console.error("Error removing document: ", error);
-        // });
-        this.stores.fire.preset(id)
-            .delete()
-            .then(() => console.log(`${id} deleted`))
-            .catch(error => console.warn(`error deleting ${id}`, error));
+    /**
+     * Delete a preset from the firestore cloud
+     * @param presetId
+     * @returns {Promise<void>}
+     */
+    deletePreset = async (presetId) => {
+        try {
+            await this.stores.fire.preset(presetId).delete();
+            console.log(`${presetId} deleted`);
+        } catch (error) {
+            //console.warn(`error deleting ${presetId}`, error);
+            throw new Error("deletePreset: error deleting preset: " + error.message());
+        }
     }
-
-    // setFirebase = firebase => {
-        // this.firebase = firebase;
-    // };
 
     setSignedIn(signedIn) {
         this.signedIn = signedIn;

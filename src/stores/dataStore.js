@@ -22,21 +22,32 @@ export class DataStore {
         });
         this.stores = stores;
 
-        this.startDataListener();
+        //this.listenToDataUpdates();
 
         // this.startListeners();
     }
 
-    setPreset = (preset, uid) => {
-        console.log("setPreset", uid);
-        this.presets.set(uid, preset);
+    createPreset = () => {
+        this.stores.fire.addPreset();
+    }
+
+    deletePreset = async (presetId) => {
+        try {
+            await this.stores.fire.deletePreset(presetId);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    setPreset = (presetId, data) => {
+        this.presets.set(presetId, data);
     };
 
     clearPresets = () => {
         this.presets.clear();
     }
-
-    startDataListener() {
+/*
+    listenToDataUpdates() {
         console.log("DataStore: startDataListener");
 
         // Presets:
@@ -58,10 +69,10 @@ export class DataStore {
         // });
     }
 
-    stopListeners() {
+    stopListening() {
         if (this.unsubscribePresets) this.unsubscribePresets();
     }
-
+*/
     // startListeners() {
     //     const db = firebase.firestore();
     //     this.unsubscribeUsers = db
