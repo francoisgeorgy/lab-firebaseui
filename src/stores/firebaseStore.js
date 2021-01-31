@@ -99,6 +99,7 @@ class fire {
 
     listenToDataUpdates() {
         console.log("fire.listenToDataUpdates");
+
         this.unsubscribeUsers = this.users()
             .onSnapshot(snapshot => {
                 console.log("fire: users snapshot received");
@@ -106,12 +107,29 @@ class fire {
                     this.stores.users.setUser(doc.data(), doc.id);
                 });
             });
+
         this.unsubscribePresets = this.presets()
             .onSnapshot(snapshot => {
-                console.log("fire: presets snapshot received");
-                snapshot.forEach(doc => {
-                    this.stores.data.setPreset(doc.id, doc.data());
+
+                snapshot.docChanges().forEach(change=> {
+                    if (change.type === "added") {
+                        console.log("added: ", change.doc.data());
+                        this.stores.data.setPreset(change.doc.id, change.doc.data());
+                    }
+                    if (change.type === "modified") {
+                        console.log("modified: ", change.doc.data());
+                        this.stores.data.setPreset(change.doc.id, change.doc.data());
+                    }
+                    if (change.type === "removed") {
+                        console.log("removed: ", change.doc.data());
+                        this.stores.data.unsetPreset(change.doc.id);
+                    }
                 });
+
+                // console.log("fire: presets snapshot received");
+                // snapshot.forEach(doc => {
+                //     this.stores.data.setPreset(doc.id, doc.data());
+                // });
             });
     }
 

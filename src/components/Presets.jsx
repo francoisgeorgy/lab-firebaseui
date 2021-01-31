@@ -39,11 +39,7 @@ export const Presets = observer(() => {
                 {/*{JSON.stringify(Object.entries(stores.data.presets), null, 4)}*/}
                 {entries(stores.data.presets).map(
                     ([key, preset], i) =>
-                        <div key={key}>
-                            <div>{i} - {key}</div>
-                            <div>{preset.name}</div>
-                            <div><button onClick={() => stores.data.deletePreset(key)}>delete</button></div>
-                        </div>
+                        <div key={key}>{i} - {key} - {preset.name} <button onClick={() => stores.data.deletePreset(key)}>delete</button></div>
                 )}
             </div>
             <pre>{JSON.stringify(stores.data.presets, null, 4)}</pre>

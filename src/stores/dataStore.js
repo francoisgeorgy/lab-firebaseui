@@ -43,6 +43,10 @@ export class DataStore {
         this.presets.set(presetId, data);
     };
 
+    unsetPreset = (presetId, data) => {
+        this.presets.delete(presetId);
+    };
+
     clearPresets = () => {
         this.presets.clear();
     }
